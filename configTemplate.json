@@ -1,0 +1,48 @@
+{
+  "sizes": {
+    "l4K": { "width": 3840, "height": 2160 },
+    "p4K": { "width": 2160, "height": 3840 },
+    "lFHD": { "width": 1920, "height": 1080 },
+    "pFHD": { "width": 1080, "height": 1920 },
+    "surface": { "width": 2880, "height": 1920 },
+    "piS": { "width": 480, "height": 320 },
+    "piL": { "width": 680, "height": 480 },
+    "S20": { "width": 1440, "height": 2904 }
+  },
+  "options": {
+    "globalPrefix": "text on image",
+    "parentFolder": "foo"
+  },
+  "assetCollections": [
+    {
+      "folder": "bar",
+      "pngs": [
+        { "name": "1", "size": "p4K", "transparent": true },
+        { "name": "2", "size": "pFHD" },
+        { "name": "3", "size": "l4K", "transparent": true },
+        { "name": "4", "size": "lFHD" },
+        { "name": "5", "size": "surface" }
+      ],
+      "mp4s": [
+        { "name": "6", "size": "p4K" },
+        { "name": "7", "size": "p4K" },
+        { "name": "8", "size": "p4K" },
+        { "name": "9", "size": "p4K" },
+        { "name": "10", "size": "l4K" },
+        { "name": "11", "size": "pFHD" },
+        { "name": "12", "size": "p4K" }
+      ],
+      "webms": [
+        { "name": "13", "size": "pFHD" },
+        { "name": "14", "size": "p4K" }
+      ]
+    },
+    {
+      "folder": "bazinga",
+      "pngs": [
+        { "name": "Color", "size": "piL" },
+        { "name": "Pillar", "size": "lFHD" }
+      ]
+    }
+  ]
+}

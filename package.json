@@ -1,0 +1,16 @@
+{
+  "name": "asset-generator",
+  "version": "1.0.0",
+  "main": "generateAssets.js",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "node ./src/generateAssets.js ./config.json",
+    "eslint": "eslint . --ext .js",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "eslint": "^8.34.0",
+    "prettier": "^2.8.4"
+  }
+}
