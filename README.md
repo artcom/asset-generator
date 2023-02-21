@@ -2,6 +2,12 @@
 
 This is a command-line tool for generating custom assets. The tool uses the [ffmpeg](https://www.ffmpeg.org/) and [ImageMagick](https://imagemagick.org/index.php) libraries to generate MP4 and WebM video files with text overlays.
 
+## Requirements
+
+You need to have [Node.js](https://nodejs.org/en/) installed on your computer. You can check if you have Node.js installed by running the command `node -v` in your terminal. If you don't have Node.js installed, you can download it from the [Node.js website](https://nodejs.org/en/).
+
+You need to have magick and ffmpeg installed on your computer. You can check if you have them installed by running the command `magick -version` and `ffmpeg -version` in your terminal. If you don't have them installed, you can download them from the [ImageMagick website](https://imagemagick.org/index.php) and the [ffmpeg website](https://www.ffmpeg.org/). You can also install them using [Homebrew](https://brew.sh/) on macOS.
+
 ## Installation
 
 Clone this repository: `git clone https://github.com/yourusername/your-repo.git`
