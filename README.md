@@ -10,7 +10,7 @@ You need to have magick and ffmpeg installed on your computer. You can check if 
 
 ## Installation
 
-Clone this repository: `git clone https://github.com/yourusername/your-repo.git`
+Clone this repository: `git clone https://github.com/artcom/asset-generator`
 Install the dependencies: `npm install`
 
 ## Usage
