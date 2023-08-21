@@ -18,13 +18,14 @@ for (const assetCollection of assetCollections) {
     }
   }
   if (checkHasPropertyAndIsArray(assetCollection, "mp4s")) {
-    for (const mp4 of assetCollection.mp4s) {
-      createMp4(folderPath, mp4)
+    for (const asset of assetCollection.mp4s) {
+      createMedia(folderPath, asset, "mp4")
     }
   }
+
   if (checkHasPropertyAndIsArray(assetCollection, "webms")) {
-    for (const webm of assetCollection.webms) {
-      createWebM(folderPath, webm)
+    for (const asset of assetCollection.webms) {
+      createMedia(folderPath, asset, "webm")
     }
   }
 }
@@ -32,24 +33,30 @@ for (const assetCollection of assetCollections) {
 const end = Date.now()
 console.info(`\n Took ${(end - start) / 1000}s`)
 
-function createMp4(folderPath, png) {
-  const nameStart = png.name + "Start"
-  const nameEnd = png.name + "End"
-  createPng(folderPath, { ...png, name: nameStart })
-  createPng(folderPath, { ...png, name: nameEnd })
-  child_process.execSync(
-    `cd ${folderPath} && ffmpeg -y -loop 1 -t 4 -i ${nameStart}.png -loop 1 -t 2 -i ${nameEnd}.png -filter_complex "[0][1]xfade=transition=fadeblack:duration=2:offset=2,format=yuv420p" ${png.name}.mp4 -hide_banner -loglevel error`
-  )
-  console.info(`Created ${folderPath}/${png.name}.mp4 ✅`)
+function createMedia(folderPath, asset, format) {
+  const nameStart = asset.name + "Start"
+  const nameEnd = asset.name + "End"
+
+  createPng(folderPath, { ...asset, name: nameStart })
+  createPng(folderPath, { ...asset, name: nameEnd })
+
+  const command = getMediaCommand(folderPath, nameStart, nameEnd, asset.name, format)
+  child_process.execSync(command)
+
+  console.info(`Created ${folderPath}/${asset.name}.${format} ✅`)
   deleteFile(folderPath, `${nameStart}.png`)
   console.info(`Deleted ${folderPath}/${nameStart}.png ✅`)
   deleteFile(folderPath, `${nameEnd}.png`)
   console.info(`Deleted ${folderPath}/${nameEnd}.png ✅`)
 }
 
+function getMediaCommand(folderPath, nameStart, nameEnd, outputName, format) {
+  return `cd ${folderPath} && ffmpeg -y -loop 1 -t 4 -i ${nameStart}.png -loop 1 -t 2 -i ${nameEnd}.png -filter_complex "[0][1]xfade=transition=fadeblack:duration=2:offset=2,format=yuv420p" ${outputName}.${format} -hide_banner -loglevel error`
+}
+
 function createPng(folderPath, { name, size, transparent = false }) {
   const { width, height } = sizes[size]
-  const scalingFactor = 0.1
+  const scalingFactor = 0.075
   const pointsize = Math.round(((width + height) / 2) * scalingFactor)
 
   const globalPrefix = options?.globalPrefix ? `${options.globalPrefix}\n` : ""
@@ -65,21 +72,6 @@ function createPng(folderPath, { name, size, transparent = false }) {
     ${folderPath}/${name}.png`
   )
   console.info(`Created ${folderPath}/${name}.png ✅`)
-}
-
-function createWebM(folderPath, png) {
-  const nameStart = png.name + "Start"
-  const nameEnd = png.name + "End"
-  createPng(folderPath, { ...png, name: nameStart })
-  createPng(folderPath, { ...png, name: nameEnd })
-  child_process.execSync(
-    `cd ${folderPath} && ffmpeg -y -loop 1 -t 4 -i ${nameStart}.png -loop 1 -t 2 -i ${nameEnd}.png -filter_complex "[0][1]xfade=transition=fadeblack:duration=2:offset=2,format=yuv420p" ${png.name}.webm -hide_banner -loglevel error`
-  )
-  deleteFile(folderPath, `${nameStart}.png`)
-  console.info(`Deleted ${folderPath}/${nameStart}.png ✅`)
-  deleteFile(folderPath, `${nameEnd}.png`)
-  console.info(`Deleted ${folderPath}/${nameEnd}.png ✅`)
-  console.info(`Created ${folderPath}/${png.name}.webm ✅`)
 }
 
 function createFolder(folder) {
