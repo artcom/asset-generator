@@ -95,7 +95,7 @@ function deleteFile(folder, file) {
 }
 
 function addLineBreak(text) {
-  return text.split(/(?=[A-Z])/).join("\\n")
+  return text.replace(/([a-z])([A-Z])/g, "$1\\n$2")
 }
 
 function checkHasPropertyAndIsArray(object, property) {
