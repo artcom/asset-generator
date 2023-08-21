@@ -49,6 +49,9 @@ function createMp4(folderPath, png) {
 
 function createPng(folderPath, { name, size, transparent = false }) {
   const { width, height } = sizes[size]
+  const scalingFactor = 0.1
+  const pointsize = Math.round(((width + height) / 2) * scalingFactor)
+
   const globalPrefix = options?.globalPrefix ? `${options.globalPrefix}\n` : ""
   const text = `${globalPrefix}${folderPath.split("/").pop()}\n\n${addLineBreak(name)}`
 
@@ -56,7 +59,7 @@ function createPng(folderPath, { name, size, transparent = false }) {
     `magick \
       -size ${width}x${height} \
       radial-gradient:${transparent ? "none" : "white"}-firebrick \
-      -pointsize 148 \
+      -pointsize ${pointsize} \
       -gravity Center \
       -draw "text 0,0 '${text}'" \
     ${folderPath}/${name}.png`
