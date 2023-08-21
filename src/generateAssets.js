@@ -40,8 +40,8 @@ function createMedia(folderPath, asset, format) {
   createPng(folderPath, { ...asset, name: nameStart })
   createPng(folderPath, { ...asset, name: nameEnd })
 
-  const command = getMediaCommand(folderPath, nameStart, nameEnd, asset.name, format)
-  child_process.execSync(command)
+  const command = getMediaCommand(nameStart, nameEnd, asset.name, format)
+  child_process.execSync(command, { cwd: folderPath })
 
   console.info(`Created ${folderPath}/${asset.name}.${format} ✅`)
   deleteFile(folderPath, `${nameStart}.png`)
@@ -50,8 +50,8 @@ function createMedia(folderPath, asset, format) {
   console.info(`Deleted ${folderPath}/${nameEnd}.png ✅`)
 }
 
-function getMediaCommand(folderPath, nameStart, nameEnd, outputName, format) {
-  return `cd ${folderPath} && ffmpeg -y -loop 1 -t 4 -i ${nameStart}.png -loop 1 -t 2 -i ${nameEnd}.png -filter_complex "[0][1]xfade=transition=fadeblack:duration=2:offset=2,format=yuv420p" ${outputName}.${format} -hide_banner -loglevel error`
+function getMediaCommand(nameStart, nameEnd, outputName, format) {
+  return `ffmpeg -y -loop 1 -t 4 -i ${nameStart}.png -loop 1 -t 2 -i ${nameEnd}.png -filter_complex "[0][1]xfade=transition=fadeblack:duration=2:offset=2,format=yuv420p" ${outputName}.${format} -hide_banner -loglevel error`
 }
 
 function createPng(folderPath, { name, size, transparent = false }) {
