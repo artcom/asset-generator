@@ -9,23 +9,21 @@ const ASSET_PATH = path.resolve("./assets")
 console.info("Starting to generate assets... \n")
 const start = Date.now()
 
+const assetHandlers = {
+  pngs: createPng,
+  mp4s: (folderPath, asset) => createMedia(folderPath, asset, "mp4"),
+  webms: (folderPath, asset) => createMedia(folderPath, asset, "webm"),
+}
+
 for (const assetCollection of assetCollections) {
   const folderPath = path.join(ASSET_PATH, options.parentFolder, assetCollection.folder)
   createFolder(folderPath)
-  if (checkHasPropertyAndIsArray(assetCollection, "pngs")) {
-    for (const png of assetCollection.pngs) {
-      createPng(folderPath, png)
-    }
-  }
-  if (checkHasPropertyAndIsArray(assetCollection, "mp4s")) {
-    for (const asset of assetCollection.mp4s) {
-      createMedia(folderPath, asset, "mp4")
-    }
-  }
 
-  if (checkHasPropertyAndIsArray(assetCollection, "webms")) {
-    for (const asset of assetCollection.webms) {
-      createMedia(folderPath, asset, "webm")
+  for (const assetType in assetHandlers) {
+    if (checkHasPropertyAndIsArray(assetCollection, assetType)) {
+      for (const asset of assetCollection[assetType]) {
+        assetHandlers[assetType](folderPath, asset)
+      }
     }
   }
 }
