@@ -34,9 +34,10 @@ console.info(`\n Took ${(end - start) / 1000}s`)
 function createMedia(folderPath, asset, format) {
   const nameStart = asset.name + "Start"
   const nameEnd = asset.name + "End"
+  const transparent = format === "webm"
 
-  createPng(folderPath, { ...asset, name: nameStart })
-  createPng(folderPath, { ...asset, name: nameEnd })
+  createPng(folderPath, { ...asset, name: nameStart, transparent })
+  createPng(folderPath, { ...asset, name: nameEnd, transparent })
 
   const command = getMediaCommand(nameStart, nameEnd, asset.name, format)
   child_process.execSync(command, { cwd: folderPath })
@@ -49,10 +50,13 @@ function createMedia(folderPath, asset, format) {
 }
 
 function getMediaCommand(nameStart, nameEnd, outputName, format) {
-  return `ffmpeg -y -loop 1 -t 4 -i ${nameStart}.png -loop 1 -t 2 -i ${nameEnd}.png -filter_complex "[0][1]xfade=transition=fadeblack:duration=2:offset=2,format=yuv420p" ${outputName}.${format} -hide_banner -loglevel error`
+  const codec = format === "webm" ? "libvpx-vp9" : ""
+  const pixelFormat = format === "webm" ? "yuva420p" : "yuv420p"
+
+  return `ffmpeg -y -loop 1 -t 4 -i ${nameStart}.png -loop 1 -t 2 -i ${nameEnd}.png -filter_complex "[0][1]xfade=transition=fadeblack:duration=2:offset=2,format=${pixelFormat}" -c:v ${codec} ${outputName}.${format} -hide_banner -loglevel error`
 }
 
-function createPng(folderPath, { name, size, transparent = false }) {
+function createPng(folderPath, { name, size, transparent = true }) {
   const { width, height } = sizes[size]
   const scalingFactor = 0.075
   const pointsize = Math.round(((width + height) / 2) * scalingFactor)
@@ -98,7 +102,7 @@ function addLineBreak(text) {
 
 function checkHasPropertyAndIsArray(object, property) {
   if (!Object.prototype.hasOwnProperty.call(object, property)) {
-    console.info(`No ${property} found on folder ${object.folder} ❌`)
+    console.info(`No ${property} found on folder ${object.folder}, skipping...`)
     return false
   }
   if (!Array.isArray(object[property])) {
